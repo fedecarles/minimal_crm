@@ -1,0 +1,121 @@
+{% extends "header.html" %}
+
+<!DOCTYPE html>
+{% block content %}
+<div class="col-md-12">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+    <br />
+    <div class="col-md-5 col-md-offset-4 centered">
+        <h3>Editar {{ titulo }}</h3>
+        <form method="POST">{% csrf_token %}
+        <input type="submit" class="btn btn-sm btn-success" value="Guardar"/>
+        {% if titulo == "Cuenta" %}
+        <a class="btn btn-sm btn-danger" href="{% url 'lista_cuentas' %}" role="button">Cancelar</a>
+        {% endif %}
+        {% if titulo == "Producto" %}
+        <a class="btn btn-sm btn-danger" href="{% url 'lista_productos' %}" role="button">Cancelar</a>
+        {% endif %}
+        <br />
+        <br />
+            <table class="table table-bordered">
+                {% for field in form %}
+                <tr>
+                    <td>{{ field.label_tag }} </td>
+                    <td>{{ field }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+    <div class="col-md-10 centered">
+        {% if form2 %}
+            {{ form2.management_form }}
+            <table id="olis" role="grid" class="stack hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Precio de Lista</th>
+                        <th>Precio Especial</th>
+                        <th>Descuento</th>
+                        <th>IVA</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Total</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for oli in form2 %}
+                    <tr>
+                        <td>{{oli.id }}</td>
+                        <td>{{oli.producto}}</td>
+                        <td>{{oli.precio_lista}}</td>
+                        <td>{{oli.precio_especial}}</td>
+                        <td>{{oli.descuento}}</td>
+                        <td>{{oli.iva}}</td>
+                        <td>{{oli.cantidad}}</td>
+                        <td>{{oli.subtotal}}</td>
+                        <td>{{oli.total}}</td>
+                        <td>{{oli.DELETE}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    </form>
+</div>
+<script type="text/javascript">
+precios = {{precios|safe}}
+
+$(document).ready(function(){
+
+    $("#olis tr").change(function(){
+        
+        descuento = $(this).find("td input[id*='-descuento']");
+        precio_lista = $(this).find("td input[id*='-precio_lista']");
+        precio_especial = $(this).find("td input[id*='-precio_especial']");
+        cantidad = $(this).find("td input[id*='-cantidad']");
+        subtotal = $(this).find("td input[id*='-subtotal']");
+        total = $(this).find("td input[id*='-total']");
+        iva = $(this).find("td select[id*='-iva']");
+
+        prod_id = "#" + $(this).find("td select[id*='-producto']").attr('id');
+        precio_lista.val(precios[$(prod_id).find("option:selected").text()]);
+
+
+        if (precio_especial.val() == ""){
+            descuento.val(0);
+            subtotal.val(parseFloat(precio_lista.val() * parseFloat(cantidad.val())).toFixed(2));
+            total.val(parseFloat(parseFloat(subtotal.val()) * (1 + parseFloat(iva.val()/100))).toFixed(2));
+        } else if (precio_especial.val() != ""){
+            descuento.val(parseFloat((precio_especial.val()/precio_lista.val())*100).toFixed(2));
+            subtotal.val(parseFloat(precio_especial.val() * parseFloat(cantidad.val())).toFixed(2));
+            total.val(parseFloat(parseFloat(subtotal.val()) * (1 + parseFloat(iva.val()/100))).toFixed(2));
+
+            }
+
+        var orden_total = 0;
+        var orden_subtotal = 0;
+        $("[id*='-subtotal']").each(function(){
+            orden_subtotal += $(this).val() * 1
+        })
+        $("#id_subtotal").val(orden_subtotal)
+
+        $("[id*='-total']").each(function(){
+            orden_total += $(this).val() * 1
+        })
+        $("#id_total").val(orden_total)
+
+    });
+    
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "header.html" %}
+<!DOCTYPE html>
+{% block content %}
+<div class="col-md-12">
+    <br />
+    <div class="col-md-5 col-md-offset-4 centered">
+    <h3>Detalles de {{titulo}}</h3>
+    {% if perms.Producto.can_change_producto %}
+    <a class="btn btn-sm btn-primary" href="{% url 'producto-update' pk=item.id %}" role="button">Editar</a>
+    {% endif %}
+    {% if perms.Producto.can_delete_producto %}
+    <a class="btn btn-sm btn-danger" href="{% url 'producto-delete' pk=item.id %}" role="button">Eliminar</a>
+    {% endif %}
+    <br />
+    <br />
+        <table class="table table-bordered">
+            <tr>
+                <td>ID:</td>
+                <td>{{ item.id}}</td>
+            </tr>
+            <tr>
+                <td>Tipo:</td>
+                <td>{{ item.tipo}}</td>
+            </tr>
+            <tr>
+                <td>Categoria:</td>
+                <td>{{ item.categoria }}</td>
+            </tr>
+            <tr>
+                <td>Nombre:</td>
+                <td>{{ item.nombre}}</td>
+            </tr>
+            <tr>
+                <td>Descripcion:</td>
+                <td>{{ item.descripcion}}</td>
+            </tr>
+            <tr>
+                <td>Precio venta:</td>
+                <td>{{ item.precio_lista }}</td>
+            </tr>
+            <tr>
+                <td>Precio compra:</td>
+                <td>{{ item.precio_compra}}</td>
+            </tr>
+            <tr>
+                <td>Stock:</td>
+                <td>{{ item.stock}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

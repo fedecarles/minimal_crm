@@ -1,0 +1,54 @@
+{% extends "header.html" %}
+<!DOCTYPE html>
+{% block content %}
+<div class="col-md-12">
+    <br />
+    {% if perms.crm.add_cuenta %}
+         <a class="btn btn-sm btn-outline-secondary" href="{% url 'cuenta-add' %}" role="button">Crear</a>
+    {% endif %}
+    <br />
+    <br />
+    <div class="col-md-10 col-md-offset-4 centered">
+    <h2>Cuentas</h2>
+        {% if lista_cuentas %}
+        <table class="table table-bordered">
+            <thead>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Calle</th>
+                <th>Complemento</th>
+                <th>Ciudad</th>
+                <th>Estado</th>
+                <th>Email</th>
+            </thead>
+        {% for cuenta in lista_cuentas %}
+            <tr>
+                <td>{{ cuenta.id }}</td>
+                <td><a href="{{ cuenta.get_absolute_url }}">{{ cuenta.nombre }}</a></td>
+                <td>{{ cuenta.calle }}</td>
+                <td>{{ cuenta.complemento }}</td>
+                <td>{{ cuenta.ciudad }}</td>
+                <td>{{ cuenta.estado }}</td>
+                <td>{{ cuenta.email }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+        {% if is_paginated %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="/lista_cuentas?page={{ page_obj.previous_page_number }}">anterior</a></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="/lista_cuentas?page={{i}}">{{i}}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="/lista_cuentas?page={{ page_obj.next_page_number }}">siguiente</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

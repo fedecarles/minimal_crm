@@ -1,0 +1,12 @@
+{% extends "header.html" %}
+
+<!DOCTYPE html>
+{% block content %}
+<br />
+<div class="col-md-5 col-md-offset-4 centered">
+    <form method="post">{% csrf_token %}
+        <p>Confirma que quiere eliminar "{{ object }}"?</p>
+    <input class="btn btn-sm btn-danger" type="submit" value="Eliminar">
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "header.html" %}
+<!DOCTYPE html>
+{% block content %}
+<div class="col-md-12">
+    <br />
+    <div class="col-md-5 col-md-offset-4 centered">
+    <h3>Detalles de {{titulo}}</h3>
+    <a class="btn btn-sm btn-primary" href="{% url 'cuenta-update' pk=item.id %}" role="button">Editar</a>
+    <a class="btn btn-sm btn-danger" href="{% url 'cuenta-delete' pk=item.id %}" role="button">Eliminar</a>
+    <br />
+    <br />
+        <table class="table table-bordered">
+            <tr>
+                <td>ID:</td>
+                <td>{{ item.id }}</td>
+            </tr>
+            <tr>
+                <td>Personeria:</td>
+                <td>{{ item.personeria}}</td>
+            </tr>
+            <tr>
+                <td>Nombre:</td>
+                <td>{{ item.nombre }}</td>
+            </tr>
+            <tr>
+                <td>Calle:</td>
+                <td>{{ item.calle }}</td>
+            </tr>
+            <tr>
+                <td>Complemento:</td>
+                <td>{{ item.complemento }}</td>
+            </tr>
+            <tr>
+                <td>Codigo Postal:</td>
+                <td>{{ item.codigo_postal}}</td>
+            </tr>
+            <tr>
+                <td>Ciudad:</td>
+                <td>{{ item.ciudad}}</td>
+            </tr>
+            <tr>
+                <td>Estado:</td>
+                <td>{{ item.estado }}</td>
+            </tr>
+            <tr>
+                <td>Pais:</td>
+                <td>{{ item.pais}}</td>
+            </tr>
+            <tr>
+                <td>Telfono:</td>
+                <td>{{ item.telefono }}</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>{{ item.email }}</td>
+            </tr>
+            <tr>
+                <td>Website:</td>
+                <td>{{ item.website }}</td>
+            </tr>
+            <tr>
+                <td>Vendedor/a:</td>
+                <td>{{ item.vendedor }}</td>
+            </tr>
+            <tr>
+                <td>Es Cliente:</td>
+                <td><input type="checkbox" {% if item.es_cliente %} checked {% endif %}</td>
+            </tr>
+            <tr>
+                <td>Es Proveedor:</td>
+                <td><input type="checkbox" {% if item.es_proveedor %} checked {% endif %} disabled/></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-10 col-md-offset-4 centered">
+    <h2>Ordenes</h2>
+        {% if lista_ordenes %}
+        <table class="table">
+            <thead>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Cuenta</th>
+                <th>Subtotal</th>
+                <th>Total</th>
+                <th>Estatus</th>
+            </thead>
+        {% for orden in lista_ordenes %}
+            <tr>
+                <td><a href="{{ orden.get_absolute_url }}">{{ orden.orden_id}}</a></td>
+                <td>{{ orden.fecha_orden }}</td>
+                <td>{{ orden.cuenta }}</td>
+                <td>{{ orden.subtotal }}</td>
+                <td>{{ orden.total }}</td>
+                <td>{{ orden.status }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+        {% if is_paginated %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="/lista_ordenes?page={{ page_obj.previous_page_number }}">anterior</a></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="/lista_ordenes?page={{i}}">{{i}}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="/lista_ordenes?page={{ page_obj.next_page_number }}">siguiente</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

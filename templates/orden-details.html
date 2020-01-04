@@ -1,0 +1,71 @@
+{% extends "header.html" %}
+<!DOCTYPE html>
+{% block content %}
+<div class="col-md-12">
+    <br />
+    <div class="col-md-5 col-md-offset-4 centered">
+        <h3>Detalles de {{titulo}}</h3>
+        {% if orden.status == "En Preparación" %}
+                <a class="btn btn-sm btn-primary" href="{% url 'orden-update' pk=orden.pk %}" role="button">Editar</a>
+                <a class="btn btn-sm btn-success" href="{% url 'confirmar-orden' pk=orden.pk %}" role="button">Confirmar</a>
+                <a class="btn btn-sm btn-danger" href="{% url 'orden-delete' pk=orden.pk %}" role="button">Eliminar</a>
+        {% elif orden.status == "Confirmada" %}
+                <a class="btn btn-sm btn-danger" href="{% url 'cancelar-orden' pk=orden.pk %}" role="button">Cancelar</a>
+        {% endif %}
+        <br />
+        <br />
+    </div>
+    <div class="col-md-12" style="border: solid 1px;">
+        <div class="col-md-10 centered">
+            <div class="col-md-7 pull-left">
+                <tr>
+                    <p>Cliente:</p>
+                    <strong>{{ orden.cuenta }}</strong>
+                      {% for c in cliente %}
+                      <p style="line-height: 5px;"><small>{{c.calle}}, {{c.complemento}}</small></p>
+                      <p style="line-height: 5px;"><small>{{c.codigo_postal}}</small></p>
+                      <p style="line-height: 5px;"><small>{{c.ciudad}}</small></p>
+                      <p style="line-height: 5px;"><small>{{c.pais}}</small></p>
+                      {% endfor %}
+            </div>
+            <div class="col-md-3 pull-right">
+                <p>Nr Orden: {{ orden.pk }}</p>
+                <p>Fecha: {{ orden.fecha_orden }}</p>
+                <p>Vendedor/a: {{ orden.vendedor }}</p>
+                <p>Estatus: {{ orden.status }}</p>
+            </div>
+        </div>
+        {% if olis %}
+        <div class="col-md-10 centered">
+            <table class="table table-bordered">
+                <thead>
+                    <th>Producto</th>
+                    <th>Precio de Lista</th>
+                    <th>Precio Especial</th>
+                    <th>Descuento %</th>
+                    <th>IVA</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Total</th>
+                </thead>
+                {% for field in olis %}
+                <tr>
+                    <td>{{ field.producto }}</td>
+                    <td>{{ field.precio_lista }}</td>
+                    <td>{{ field.precio_especial }}</td>
+                    <td>{{ field.descuento }}</td>
+                    <td>{{ field.iva }}</td>
+                    <td>{{ field.cantidad }}</td>
+                    <td>{{ field.subtotal }}</td>
+                    <td>{{ field.total }}</td>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+        <div class="col-md-9 centered">
+            <p style="text-align: right;"><strong>Subtotal:</strong> {{ orden.subtotal }}</p>
+            <p style="text-align: right;"><strong>Total:</strong> {{ orden.total }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "header.html" %}
+<!DOCTYPE html>
+{% block content %}
+<div class="col-md-12">
+    <br />
+    {% if perms.crm.add_orden %}
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'orden-add' %}" role="button">Crear</a>
+    {% endif %}
+    <br />
+    <br />
+    <div class="col-md-10 col-md-offset-4 centered">
+    <h2>Ordenes</h2>
+        {% if lista_ordenes %}
+        <table class="table table-bordered">
+            <thead>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Cuenta</th>
+                <th>Subtotal</th>
+                <th>Total</th>
+                <th>Estatus</th>
+            </thead>
+        {% for orden in lista_ordenes %}
+            <tr>
+                <td><a href="{{ orden.get_absolute_url }}">{{ orden.orden_id}}</a></td>
+                <td>{{ orden.fecha_orden }}</td>
+                <td>{{ orden.cuenta }}</td>
+                <td>{{ orden.subtotal }}</td>
+                <td>{{ orden.total }}</td>
+                <td>{{ orden.status }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+        {% if is_paginated %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="/lista_ordenes?page={{ page_obj.previous_page_number }}">anterior</a></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="/lista_ordenes?page={{i}}">{{i}}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="/lista_ordenes?page={{ page_obj.next_page_number }}">siguiente</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

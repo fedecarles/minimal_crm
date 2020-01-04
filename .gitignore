@@ -1,0 +1,4 @@
+minimal_crm/secret_settings.py
+minimal_crm/__pycache__
+crm/migrations
+crm/__pycache__
